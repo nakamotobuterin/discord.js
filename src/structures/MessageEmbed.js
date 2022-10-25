@@ -17,6 +17,8 @@ class MessageEmbed {
      * @type {Message}
      */
     this.message = message;
+    
+    this.data = { ...data };
 
     this.setup(data);
   }
@@ -100,6 +102,10 @@ class MessageEmbed {
      * @type {?MessageEmbedFooter}
      */
     this.footer = data.footer ? new MessageEmbedFooter(this, data.footer) : null;
+  }
+  
+  toJSON() {
+    return { ...this.data };
   }
 
   /**
