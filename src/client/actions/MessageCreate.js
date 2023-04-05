@@ -28,19 +28,25 @@ class MessageCreateAction extends Action {
           messages,
         };
       } else {
-        const message = channel._cacheMessage(new Message(channel, data, client));
-        channel.lastMessageID = data.id;
-        if (user) {
-          user.lastMessageID = data.id;
-          user.lastMessage = message;
+        try {
+          const message = channel._cacheMessage(new Message(channel, data, client));
+          channel.lastMessageID = data.id;
+          if (user) {
+            user.lastMessageID = data.id;
+            user.lastMessage = message;
+          }
+          if (member) {
+            member.lastMessageID = data.id;
+            member.lastMessage = message;
+          }
+          return {
+            message,
+          };
+        } catch (error) {
+          return {
+            message: null,
+          };
         }
-        if (member) {
-          member.lastMessageID = data.id;
-          member.lastMessage = message;
-        }
-        return {
-          message,
-        };
       }
     }
 
