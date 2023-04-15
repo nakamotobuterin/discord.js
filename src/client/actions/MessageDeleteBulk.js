@@ -9,11 +9,15 @@ class MessageDeleteBulkAction extends Action {
 
     if (channel) {
       for (const id of data.ids) {
-        const message = channel.messages.get(id);
-        if (message) {
-          message.deleted = true;
-          messages.set(message.id, message);
-          channel.messages.delete(id);
+        try {
+          const message = channel.messages.get(id);
+          if (message) {
+            message.deleted = true;
+            messages.set(message.id, message);
+            channel.messages.delete(id);
+          }
+        } catch (error) {
+          return { messages };
         }
       }
     }
