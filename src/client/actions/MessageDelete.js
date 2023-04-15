@@ -12,15 +12,19 @@ class MessageDeleteAction extends Action {
     let message;
 
     if (channel) {
-      message = channel.messages.get(data.id);
-      if (message) {
-        channel.messages.delete(message.id);
-        this.deleted.set(channel.id + message.id, message);
-        this.scheduleForDeletion(channel.id, message.id);
-      } else {
-        message = this.deleted.get(channel.id + data.id) || null;
+      try {
+        message = channel.messages.get(data.id);
+        if (message) {
+          channel.messages.delete(message.id);
+          this.deleted.set(channel.id + message.id, message);
+          this.scheduleForDeletion(channel.id, message.id);
+        } else {
+          message = this.deleted.get(channel.id + data.id) || null;
+        }
+        if (message) message.deleted = true;
+      } catch (error) {
+        return { message };
       }
-      if (message) message.deleted = true;
     }
 
     return { message };
